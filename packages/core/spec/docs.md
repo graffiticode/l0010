@@ -4,35 +4,29 @@
 **Introduction**
 
 *Graffiticode* is a collection of domain languages used for creating task
-specific web apps. **L0010** is a *Graffiticode* language for writing
-'hello, world' web apps.
-
-L0010 can be used as a template for creating other, presumably more
-interesting and useful, languages.
+specific web apps. **L0010** is the *Graffiticode* composition planner: given a
+request, it produces the ordered sequence of languages needed to fulfil it.
 
 ### Overview
 
 The code
 
 ```
-hello "world"..
+plan ["0158" "0166"]..
 ```
 
-renders
+evaluates to
 
-| **hello, world!**
+```
+{ "langs": ["0158", "0166"] }
+```
 
-in the browser view.
+a composition plan whose head (L0158) consumes the data model produced by the
+next language (L0166). One id is an atomic request; an empty list is no
+composition.
 
 ### Vocabulary
 
-
-| Function  | Arity | Example  | Description |
-| --------- | :---: | -------- | ----------- |
-| **hello** | 1     | `hello "world"` | renders **hello, world!** in the form |
-| **val**   | 2     | `val ob "x"` | returns the value of `x` in `ob` |
-| **concat**| 1     | `concat [x,y]` | returns the string value that is the concatentation of the values of x and y |
-| **add**   | 2     | `add x y` | returns the sum of values of `x` and `y` |
-| **map**   | 2     | `map fn [1,2,3]` | returns a list containing the result of applying `fn` to each element in the list `[1,2,3]` |
-| **data**  | 1     | `data ob` | returns the value of data passed to the current task, or otherwise the value of `ob` |
-
+| Function | Arity | Example | Description |
+| -------- | :---: | ------- | ----------- |
+| **plan** | 1 | `plan ["0158" "0166"]` | returns `{ langs: [...] }` — the ordered composition pipeline (head first; each language consumes the next) |

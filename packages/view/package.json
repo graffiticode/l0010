@@ -1,7 +1,7 @@
 {
   "name": "@graffiticode/l0010-view",
   "version": "0.1.0",
-  "description": "L0010 view — the language-specific Form (hello/image/theme), rendered through the shared View inherited from @graffiticode/l0000-view",
+  "description": "L0010 view — renders the composition plan (language sequence) through the shared View inherited from @graffiticode/l0000-view",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

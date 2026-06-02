@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "version": "0.0.0",
-  "description": "L0010 — a Graffiticode dialect (first child of L0000)",
+  "description": "L0010 — the Graffiticode composition planning dialect",
   "workspaces": [
     "packages/core",
     "packages/api",

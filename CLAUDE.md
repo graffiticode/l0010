@@ -29,13 +29,13 @@ Vitest is installed at the root but no test runner script is wired up yet, and n
 
 ## Architecture
 
-L0010 is a Graffiticode dialect — the first child of `@graffiticode/l0000`. It's an npm-workspaces monorepo with three packages.
+L0010 is the Graffiticode **composition planning** dialect, inheriting `@graffiticode/l0000`. It maps a request to an ordered language sequence (`plan [...]` → `{ langs: [...] }`). It's an npm-workspaces monorepo with three packages.
 
 ### Structure
 
 - **`packages/core/`** — `@graffiticode/l0010`: the language itself. Pure TypeScript.
-  - `src/lexicon.ts`: merges L0000's base lexicon with L0010's additions (`hello`, `image`, `theme`, `id`, plus `DARK`/`LIGHT` tags)
-  - `src/compiler.ts`: `Checker` and `Transformer` classes extending L0000's, adding handlers for the L0010 vocabulary
+  - `src/lexicon.ts`: merges L0000's base lexicon with L0010's single addition (`plan`)
+  - `src/compiler.ts`: `Checker` and `Transformer` classes extending L0000's, adding the `PLAN` handlers (validate ids / build `{ langs }`)
   - `spec/`: language documentation, examples, schema, RAG training prompts, etc.
   - `tools/build-static.js`: copies spec content into `dist/static/` for the API to serve
 
@@ -45,8 +45,7 @@ L0010 is a Graffiticode dialect — the first child of `@graffiticode/l0000`. It
   - Port: 50010 (dev) or `process.env.PORT`
 
 - **`packages/view/`** — `@graffiticode/l0010-view`: React view component. Vite + TypeScript + Tailwind.
-  - `src/components/form/Form.tsx`: language-specific form rendering
-  - `src/components/form/ThemeToggle.tsx`: dark/light toggle wired up by the `theme` function
+  - `src/components/form/Form.tsx`: renders the compiled plan (`{ langs }`) as an ordered pipeline
   - `embed/`: standalone HTML entry built by `vite.embed.config.ts` for embedding in the API's static bundle
   - Built on top of `@graffiticode/l0000-view`
 
@@ -60,16 +59,13 @@ L0010 is a Graffiticode dialect — the first child of `@graffiticode/l0000`. It
 
 ### Language Functions
 
-L0010 inherits the full L0000 base vocabulary (arithmetic, lists, lambdas, `map`/`filter`/`reduce`, pattern matching, tags) and adds:
+L0010 inherits the L0000 base vocabulary and adds a single function:
 
 | Function | Arity | Description |
 |----------|:-----:|-------------|
-| `hello`  | 1 | Renders `hello, {string}!` |
-| `image`  | 1 | Renders an image at the given URL |
-| `theme`  | 2 | Wraps a UI expression in a theme (`DARK` or `LIGHT`) with a toggle button |
-| `id`     | 2 | Tags an expression with a stable identifier |
+| `plan`   | 1 | Takes a list of language-id strings → `{ langs: [...] }` (head first; each consumes the next). One id = atomic; empty = no composition. |
 
-The `Checker` validates that `theme`'s first argument is the `DARK` or `LIGHT` tag; unhandled tags fall through to L0000's base handlers via the shared Visitor dispatch.
+The `Checker` validates that every element is a language id (`^\d{3,5}$`), rejects duplicates, and caps the sequence at 4; the `Transformer` evaluates the list to `{ langs }`. Base `PROG` returns that as the program's data.
 
 ### Data Flow
 

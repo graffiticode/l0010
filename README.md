@@ -3,18 +3,15 @@
 [![License: MIT](https://img.shields.io/badge/Code-MIT-blue.svg)](packages/LICENSE)
 [![License: CC BY 4.0](https://img.shields.io/badge/Docs-CC%20BY%204.0-lightgrey.svg)](LICENSE-DOCS)
 
-L0010 is a Graffiticode dialect — the first child of [@graffiticode/l0000](https://www.npmjs.com/package/@graffiticode/l0000). It inherits L0000's base functional vocabulary (arithmetic, lists, lambdas, `map`/`filter`/`reduce`, pattern matching, tags) and adds a small set of UI primitives for rendering hello greetings, images, and themed output.
+L0010 is the Graffiticode **composition planning** dialect, inheriting [@graffiticode/l0000](https://www.npmjs.com/package/@graffiticode/l0000). Given a natural-language request, it produces an ordered sequence of Graffiticode language ids — a linear composition pipeline where the head is the final artifact and each language consumes the data model produced by the next. It authors no content itself; it only decides which languages run and in what order.
 
 ## Vocabulary
 
-L0010 adds the following on top of the L0000 base lexicon:
+L0010 adds a single function on top of the L0000 base lexicon:
 
 | Function | Arity | Example | Description |
 |----------|:-----:|---------|-------------|
-| `hello`  | 1 | `hello "world"..` | Renders **hello, world!** |
-| `image`  | 1 | `image "https://example.com/photo.jpg"..` | Renders an image at the given URL |
-| `theme`  | 2 | `theme DARK hello "world"..` | Wraps a UI expression in a theme (`DARK` or `LIGHT`) with a toggle |
-| `id`     | 2 | `id "tag" expr..` | Tags an expression with a stable identifier |
+| `plan`   | 1 | `plan ["0158" "0166"]..` | Builds a composition plan: a list of language-id strings → `{ langs: [...] }` (head first; each consumes the next). One id = atomic; empty = no composition. |
 
 See [`packages/core/spec/`](packages/core/spec/) for the full language specification, examples, and authoring guide.
 
